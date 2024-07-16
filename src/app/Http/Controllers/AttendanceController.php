@@ -3,29 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Stamp;
 use Carbon\Carbon;
-use Auth;
 
 class AttendanceController extends Controller
 {
-    public function attendance(Request $request)
-    {
-        $user = Auth::user();
+    public function searchByDate(Request $request, $date = null)
+{
+    $date = $date ?: Carbon::today()->toDateString();
+    $currentDate = Carbon::parse($date)->toDateString();
+    $prevDate = Carbon::parse($date)->subDay()->toDateString();
+    $nextDate = Carbon::parse($date)->addDay()->toDateString();
 
-        if (!$user) {
-            return redirect()->route('login');
-        }
+    $stamps = [
+        (object)[
+            'user' => (object)['name' => '山田太郎'],
+            'clock_in' => '09:00',
+            'clock_out' => '18:00',
+            'rests' => [(object)['rest_time' => '12:00']],
+            'work_time' => '08:00'
+        ],
+    ];
 
-        $stamps = Stamp::with('rests')->where('user_id', $user->id)->get();
-        $prevDate = now()->subDay()->toDateString();
-        $currentDate = now()->toDateString();
-
-        $stamps->transform(function ($stamp) {
-            $stamp->created_at = Carbon::parse($stamp->created_at)->toDateString();
-            return $stamp;
-        });
-
-        return view('attendance', compact('stamps', 'prevDate', 'currentDate'));
-    }
+    return view('attendance', compact('currentDate', 'prevDate', 'nextDate', 'stamps'));
+}
 }

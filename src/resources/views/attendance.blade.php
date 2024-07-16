@@ -30,9 +30,11 @@
 
 @section('content')
 <div class="attendance__inner">
-    <h1>Attendance</h1>
-    <p>Previous Date: {{ $prevDate }}</p>
-    <p>Current Date: {{ $currentDate }}</p>
+    <div class="attendance__date">
+        <a href="{{ route('attendance.search', ['date' => $prevDate]) }}" class="attendance__arrow">&lt;</a>
+        <span>{{ $currentDate }}</span>
+        <a href="{{ route('attendance.search', ['date' => $nextDate]) }}" class="attendance__arrow">&gt;</a>
+    </div>
     <div class="attendance-table">
         <table>
             <thead>

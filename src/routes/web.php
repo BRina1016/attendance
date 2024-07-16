@@ -20,8 +20,7 @@ use App\Http\Controllers\LoginController;
 */
 
 Route::get('/', function () { return view('index'); });
-Route::get('/attendance', [AttendanceController::class, 'attendance']);
-Route::get('/attendance/search/{date}', [AttendanceController::class, 'searchByDate'])->name('attendance.search');
+Route::get('/attendance/{date?}', [AttendanceController::class, 'searchByDate'])->name('attendance.search');
 Route::get('/login', [StampController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'register']);
 

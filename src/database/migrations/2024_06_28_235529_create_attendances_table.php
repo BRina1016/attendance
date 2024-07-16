@@ -13,9 +13,8 @@ class CreateAttendancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendances', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('stamps', function (Blueprint $table) {
+            $table->date('date')->after('clock_out');
         });
     }
 
@@ -26,6 +25,8 @@ class CreateAttendancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendances');
+        Schema::table('stamps', function (Blueprint $table) {
+            $table->dropColumn('date');
+        });
     }
 }
