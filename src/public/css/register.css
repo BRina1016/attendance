@@ -1,0 +1,46 @@
+.register__heading {
+    margin-top: 50px;
+}
+
+.register__inner {
+    max-width: 1230px;
+    width: 100%;
+    margin: 30px auto 0 auto;
+    text-align: center;
+}
+
+.register__group,
+.register__btn {
+    border-radius: 4px;
+    padding: 8px 15px;
+}
+
+.register__group {
+    max-width: 400px;
+    height: 40px;
+    border: 1px solid #B6B6B6;
+    text-align: left;
+    margin: 25px auto;
+}
+
+.register__input {
+    font-size: 14px;
+}
+
+.register__btn {
+    width: 400px;
+    height: 40px;
+    background: #344CDB;
+    color: #fff;
+    font-size: 14px;
+}
+.register__bottom {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #3e3e3e;
+}
+
+.register__text-link {
+    text-decoration: none;
+    color: #344CDB;
+}

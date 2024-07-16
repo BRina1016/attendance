@@ -1,0 +1,31 @@
+.stamp__heading{
+    margin-top: 20px;
+}
+
+.stamp{
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.stamp__inner{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.stamp-form__btn{
+    width: 40%;
+    height: 200px;
+    font-size: 20px;
+    margin: 20px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.btn__on{
+}
+
+.btn__off{
+    pointer-events: none;
+    color: #E3E3E3;
+}

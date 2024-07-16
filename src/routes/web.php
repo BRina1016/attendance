@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\StampController;
+use App\Http\Controllers\RestController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\LoginController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +19,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function () { return view('index'); });
+Route::get('/attendance', [AttendanceController::class, 'attendance']);
+Route::get('/attendance/search/{date}', [AttendanceController::class, 'searchByDate'])->name('attendance.search');
+Route::get('/login', [StampController::class, 'login']);
+Route::get('/register', [RegisterController::class, 'register']);
+
+Auth::routes();
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/stamp/clock_in', [StampController::class, 'clock_in']);
+    Route::post('/stamp/clock_out', [StampController::class, 'clock_out']);
+    Route::post('/stamp/rest_start', [RestController::class, 'rest_start']);
+    Route::post('/stamp/rest_end', [RestController::class, 'rest_end']);
+    Route::get('/stamp/status', [StampController::class, 'status']);
 });
