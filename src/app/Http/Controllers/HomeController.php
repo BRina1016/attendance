@@ -25,12 +25,4 @@ class HomeController extends Controller
     {
         return view('index');
     }
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login'); // ログアウト後にリダイレクトするパスを指定
-    }
 }

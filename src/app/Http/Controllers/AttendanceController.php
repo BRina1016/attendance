@@ -3,27 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Stamp;
 use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
     public function searchByDate(Request $request, $date = null)
-{
-    $date = $date ?: Carbon::today()->toDateString();
-    $currentDate = Carbon::parse($date)->toDateString();
-    $prevDate = Carbon::parse($date)->subDay()->toDateString();
-    $nextDate = Carbon::parse($date)->addDay()->toDateString();
+    {
+        $date = $date ?: Carbon::today()->toDateString();
+        $currentDate = Carbon::parse($date);
+        $prevDate = $currentDate->copy()->subDay()->toDateString();
+        $nextDate = $currentDate->copy()->addDay()->toDateString();
 
-    $stamps = [
-        (object)[
-            'user' => (object)['name' => '山田太郎'],
-            'clock_in' => '09:00',
-            'clock_out' => '18:00',
-            'rests' => [(object)['rest_time' => '12:00']],
-            'work_time' => '08:00'
-        ],
-    ];
+        $stamps = Stamp::whereDate('clock_in', $date)->with('user')->get();
 
-    return view('attendance', compact('currentDate', 'prevDate', 'nextDate', 'stamps'));
-}
+        return view('attendance', compact('currentDate', 'prevDate', 'nextDate', 'stamps'));
+    }
 }
