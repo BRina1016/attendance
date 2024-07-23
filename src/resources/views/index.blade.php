@@ -33,7 +33,7 @@
 @section('content')
 <div class="stamp">
     <div class="stamp__inner">
-        <h2 class="stamp__heading content__heading">さんお疲れ様です！</h2>
+        <h2 class="stamp__heading content__heading">{{ Auth::user()->name }}さんお疲れ様です！</h2>
         <button id="clock_in" class="btn__on stamp-form__btn">勤務開始</button>
         <button id="clock_out" class="btn__off stamp-form__btn" disabled>勤務終了</button>
         <button id="rest_start" class="btn__off stamp-form__btn" disabled>休憩開始</button>

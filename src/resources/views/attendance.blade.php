@@ -32,7 +32,7 @@
 <div class="attendance__inner">
     <div class="attendance__date">
         <a href="{{ route('attendance.search', ['date' => $prevDate]) }}" class="attendance__arrow">&lt;</a>
-        <span>{{ $currentDate }}</span>
+        <span>{{ \Carbon\Carbon::parse($currentDate)->format('Y-m-d') }}</span>
         <a href="{{ route('attendance.search', ['date' => $nextDate]) }}" class="attendance__arrow">&gt;</a>
     </div>
     <div class="attendance-table">
