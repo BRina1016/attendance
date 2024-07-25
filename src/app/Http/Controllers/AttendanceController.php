@@ -15,7 +15,7 @@ class AttendanceController extends Controller
         $prevDate = $currentDate->copy()->subDay()->toDateString();
         $nextDate = $currentDate->copy()->addDay()->toDateString();
 
-        $stamps = Stamp::whereDate('clock_in', $date)->with('user')->get();
+        $stamps = Stamp::whereDate('clock_in', $date)->with('user', 'rests')->paginate(5);
 
         return view('attendance', compact('currentDate', 'prevDate', 'nextDate', 'stamps'));
     }

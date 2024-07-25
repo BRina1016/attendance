@@ -50,8 +50,8 @@
                 @foreach ($stamps as $stamp)
                 <tr class="attendance-list">
                     <td class="attendance-list__item">{{ $stamp->user->name }}</td>
-                    <td class="attendance-list__item">{{ \Carbon\Carbon::parse($stamp->clock_in)->format('H:i') }}</td>
-                    <td class="attendance-list__item">{{ \Carbon\Carbon::parse($stamp->clock_out)->format('H:i') }}</td>
+                    <td class="attendance-list__item">{{ \Carbon\Carbon::parse($stamp->clock_in)->format('H:i:s') }}</td>
+                    <td class="attendance-list__item">{{ \Carbon\Carbon::parse($stamp->clock_out)->format('H:i:s') }}</td>
                     <td class="attendance-list__item">
                         @php
                             $totalRestSeconds = 0;
@@ -59,13 +59,16 @@
                                 $totalRestSeconds += strtotime($rest->rest_time) - strtotime('TODAY');
                             }
                         @endphp
-                        {{ gmdate('H:i', $totalRestSeconds) }}
+                        {{ gmdate('H:i:s', $totalRestSeconds) }}
                     </td>
                     <td class="attendance-list__item">{{ $stamp->work_time }}</td>
                 </tr>
-            @endforeach
+                @endforeach
             </tbody>
         </table>
+    </div>
+    <div class="pagination-links">
+        {{ $stamps->links('vendor.pagination.custom') }}
     </div>
 </div>
 @endsection
