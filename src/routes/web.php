@@ -6,7 +6,7 @@ use App\Http\Controllers\StampController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/stamp/rest_start', [RestController::class, 'rest_start']);
     Route::post('/stamp/rest_end', [RestController::class, 'rest_end']);
     Route::get('/stamp/status', [StampController::class, 'status']);
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 });
