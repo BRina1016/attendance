@@ -44,7 +44,7 @@ class RestController extends Controller
             $rest = Rest::where('user_id', $user->id)->where('stamp_id', $stamp->stamp_id)->whereNull('rest_end')->first();
             if ($rest) {
                 $rest->rest_end = now();
-                $seconds = $rest->rest_start->diffInSeconds($rest->rest_end);  // ここで diffInSeconds() を使用
+                $seconds = $rest->rest_start->diffInSeconds($rest->rest_end);
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds % 3600) / 60);
 

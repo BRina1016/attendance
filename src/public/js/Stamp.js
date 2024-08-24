@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 最初に正しいボタン状態を設定
+    // 最初にボタンの状態をリセット
     resetButtonsToInitialState();
 
-    // 以下のイベントリスナーと既存の関数はそのまま
+    // 勤務開始が既に押されているか確認
+    checkClockInStatus();
+
     document.getElementById('clock_in').addEventListener('click', function () {
         clock_in();
         sendRequest('clock_in');
@@ -24,8 +26,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function checkClockInStatus() {
+    fetch('/stamp/check-status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'already_clocked_in') {
+                clock_in();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 function resetButtonsToInitialState() {
-    // 最初に勤務開始のみを有効にし、他は無効に設定
     document.getElementById('clock_in').disabled = false;
     document.getElementById('clock_out').disabled = true;
     document.getElementById('rest_start').disabled = true;
@@ -36,7 +48,6 @@ function resetButtonsToInitialState() {
     document.getElementById('rest_start').classList.add('btn__off');
     document.getElementById('rest_end').classList.add('btn__off');
 }
-
 
 function clock_in() {
     document.getElementById('clock_in').disabled = true;
@@ -100,7 +111,38 @@ function sendRequest(action) {
         return response.json();
     })
     .then(data => {
-        console.log('Response:', data);  // デバッグのためにレスポンスをログに出力
+        console.log('Response:', data);
     })
     .catch(error => console.error('Error:', error));
 }
+
+function resetButtonsToInitialState() {
+    // 日付のリセット処理
+    let lastAccessDate = localStorage.getItem('lastAccessDate');
+    let today = new Date().toISOString().split('T')[0];
+
+    if (lastAccessDate !== today) {
+        localStorage.setItem('lastAccessDate', today);
+        localStorage.removeItem('clockedIn');  // 勤務開始ボタンの状態をリセット
+    }
+
+    // 勤務開始ボタンの状態をチェック
+    let clockedIn = localStorage.getItem('clockedIn');
+    if (!clockedIn) {
+        document.getElementById('clock_in').disabled = false;
+        document.getElementById('clock_in').classList.add('btn__on');
+    } else {
+        clock_in();  // 勤務開始済みの状態にする
+    }
+}
+
+function clock_out() {
+    let restStart = document.getElementById('rest_start').disabled;
+    if (restStart && !document.getElementById('rest_end').disabled) {
+        document.getElementById('rest_end').click();
+    }
+    disableAllButtons();
+    sendRequest('clock_out');
+}
+
+

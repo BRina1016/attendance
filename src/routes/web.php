@@ -23,6 +23,7 @@ Route::get('/', function () { return view('index'); });
 Route::get('/attendance/{date?}', [AttendanceController::class, 'searchByDate'])->name('attendance.search');
 Route::get('/login', [StampController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'register']);
+Route::get('/stamp/check-status', [StampController::class, 'checkStatus']);
 
 Auth::routes();
 
@@ -34,4 +35,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stamp/status', [StampController::class, 'status']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/', [HomeController::class, 'index'])->name('home');
+});
+
+Route::middleware(['cors'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
+
+    Route::get('/profile', function () {
+        return view('profile');
+    });
 });

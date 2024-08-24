@@ -64,4 +64,31 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+{
+    $schedule->call(function () {
+        \Log::info('Task is running at: ' . Carbon::now()->format('H:i:s'));
+
+        // 実行するタスクの処理
+        $stamps = Stamp::whereNull('clock_out')->get();
+
+        foreach ($stamps as $stamp) {
+            \Log::info('Processing stamp ID: ' . $stamp->id);
+
+            // タイムゾーンを明示的に指定
+            $clockOutTime = Carbon::parse($stamp->clock_in, 'UTC')->endOfDay()->subSecond();
+            $stamp->clock_out = $clockOutTime;
+            $stamp->work_time = $stamp->clock_in->diffInSeconds($stamp->clock_out);
+
+            if ($stamp->save()) {
+                \Log::info('Successfully clocked out for stamp ID: ' . $stamp->id);
+            } else {
+                \Log::error('Failed to save clock out for stamp ID: ' . $stamp->id);
+            }
+        }
+    })->everyMinute();  // 毎分実行されるように設定
+}
+
+
 }

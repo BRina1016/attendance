@@ -15,7 +15,8 @@ class Stamp extends Model
         'user_id',
         'clock_in',
         'clock_out',
-        'work_time'
+        'work_time',
+        'date'
     ];
 
     protected $dates = ['clock_in', 'clock_out'];
