@@ -70,13 +70,11 @@ class Kernel extends HttpKernel
     $schedule->call(function () {
         \Log::info('Task is running at: ' . Carbon::now()->format('H:i:s'));
 
-        // 実行するタスクの処理
         $stamps = Stamp::whereNull('clock_out')->get();
 
         foreach ($stamps as $stamp) {
             \Log::info('Processing stamp ID: ' . $stamp->id);
 
-            // タイムゾーンを明示的に指定
             $clockOutTime = Carbon::parse($stamp->clock_in, 'UTC')->endOfDay()->subSecond();
             $stamp->clock_out = $clockOutTime;
             $stamp->work_time = $stamp->clock_in->diffInSeconds($stamp->clock_out);
@@ -87,7 +85,7 @@ class Kernel extends HttpKernel
                 \Log::error('Failed to save clock out for stamp ID: ' . $stamp->id);
             }
         }
-    })->everyMinute();  // 毎分実行されるように設定
+    })->everyMinute();
 }
 
 

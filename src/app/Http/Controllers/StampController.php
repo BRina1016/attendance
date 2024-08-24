@@ -16,7 +16,6 @@ class StampController extends Controller
         $userId = Auth::id();
         $today = Carbon::today();
 
-        // すでに今日の勤務開始が記録されているかチェック
         $alreadyClockedIn = Stamp::where('user_id', $userId)
                                     ->whereDate('clock_in', $today)
                                     ->exists();
@@ -25,7 +24,6 @@ class StampController extends Controller
             return response()->json(['status' => 'already_clocked_in'], 400);
         }
 
-        // 勤務開始を記録
         $stamp = new Stamp();
         $stamp->user_id = $userId;
         $stamp->clock_in = now();
@@ -89,7 +87,6 @@ class StampController extends Controller
 
                 $stamp->work_time = $formattedTime;
 
-                // 休憩中なら休憩終了時間を勤務終了時間と同じにする
                 $rest = Rest::where('stamp_id', $stamp->id)->whereNull('rest_end')->first();
                 if ($rest) {
                     $rest->rest_end = $stamp->clock_out;
@@ -147,7 +144,6 @@ class StampController extends Controller
         if ($stamp) {
             $now = Carbon::now();
 
-            // 休憩中であれば、休憩終了時間を勤務終了時間と同じにする
             $rest = Rest::where('stamp_id', $stamp->id)->whereNull('rest_end')->first();
             if ($rest) {
                 $rest->rest_end = $now;
@@ -155,7 +151,6 @@ class StampController extends Controller
                 $rest->save();
             }
 
-            // 勤務終了時間を記録
             $stamp->clock_out = $now;
             $stamp->work_time = $stamp->clock_in->diffInSeconds($stamp->clock_out);
             $stamp->save();

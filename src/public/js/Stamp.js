@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 最初にボタンの状態をリセット
+
     resetButtonsToInitialState();
 
-    // 勤務開始が既に押されているか確認
     checkClockInStatus();
 
     document.getElementById('clock_in').addEventListener('click', function () {
@@ -117,22 +116,21 @@ function sendRequest(action) {
 }
 
 function resetButtonsToInitialState() {
-    // 日付のリセット処理
+
     let lastAccessDate = localStorage.getItem('lastAccessDate');
     let today = new Date().toISOString().split('T')[0];
 
     if (lastAccessDate !== today) {
         localStorage.setItem('lastAccessDate', today);
-        localStorage.removeItem('clockedIn');  // 勤務開始ボタンの状態をリセット
+        localStorage.removeItem('clockedIn');
     }
 
-    // 勤務開始ボタンの状態をチェック
     let clockedIn = localStorage.getItem('clockedIn');
     if (!clockedIn) {
         document.getElementById('clock_in').disabled = false;
         document.getElementById('clock_in').classList.add('btn__on');
     } else {
-        clock_in();  // 勤務開始済みの状態にする
+        clock_in();
     }
 }
 
