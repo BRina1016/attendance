@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\StampController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ListController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 
@@ -20,6 +21,8 @@ use App\Http\Controllers\HomeController;
 */
 
 Route::get('/', function () { return view('index'); });
+Route::get('/list', [ListController::class, 'userList'])->name('user.list');
+Route::get('/list/{user}/{year?}/{month?}', [ListController::class, 'showUser'])->name('user.show');
 Route::get('/attendance/{date?}', [AttendanceController::class, 'searchByDate'])->name('attendance.search');
 Route::get('/login', [StampController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'register']);
