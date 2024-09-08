@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
+<form method="POST" action="/login" novalidate>
 <link rel="stylesheet" href="{{ asset('css/login.css')}}">
 @endsection
 
@@ -12,7 +13,7 @@
                 <h2 class="login__heading content__heading">ログイン</h2>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login') }}" novalidate>
                         @csrf
 
                         <div class="row mb-3 login__group">

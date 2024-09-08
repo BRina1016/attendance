@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Auth\Notifications\VerifyEmail as VerifyEmailNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +34,17 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function boot()
     {
+        parent::boot();
+
+    \Illuminate\Auth\Notifications\VerifyEmail::toMailUsing(function ($notifiable) {
+        return (new \Illuminate\Notifications\Messages\MailMessage)
+                ->line('Please click the button below to verify your email address.')
+                ->action('Verify Email Address', url('/login'))
+                ->line('If you did not create an account, no further action is required.');
+    });
         $this->configureRateLimiting();
 
         $this->routes(function () {

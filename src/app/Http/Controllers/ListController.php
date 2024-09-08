@@ -12,26 +12,25 @@ class ListController extends Controller
 {
     public function userList()
     {
-        $users = User::paginate(50);
+        $users = User::orderBy('name', 'asc')->paginate(50);
         return view('list', compact('users'));
     }
 
     public function showUser(User $user, $year = null, $month = null)
-{
-    $year = $year ?? Carbon::now()->year;
-    $month = $month ?? Carbon::now()->month;
+    {
+        $year = $year ?? Carbon::now()->year;
+        $month = $month ?? Carbon::now()->month;
 
-    $stamps = Stamp::where('user_id', $user->id)
-        ->whereYear('clock_in', $year)
-        ->whereMonth('clock_in', $month)
-        ->with('rests')
-        ->paginate(5);
+        $stamps = Stamp::where('user_id', $user->id)
+            ->whereYear('clock_in', $year)
+            ->whereMonth('clock_in', $month)
+            ->with('rests')
+            ->paginate(5);
 
-    $previousMonth = Carbon::create($year, $month, 1)->subMonth();
-    $nextMonth = Carbon::create($year, $month, 1)->addMonth();
+        $previousMonth = Carbon::create($year, $month, 1)->subMonth();
+        $nextMonth = Carbon::create($year, $month, 1)->addMonth();
 
-    return view('show', compact('user', 'stamps', 'previousMonth', 'nextMonth', 'year', 'month'));
-}
-
+        return view('show', compact('user', 'stamps', 'previousMonth', 'nextMonth', 'year', 'month'));
+    }
 
 }

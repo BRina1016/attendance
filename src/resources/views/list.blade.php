@@ -11,9 +11,9 @@
         <li><a href="/attendance">日付一覧</a></li>
         <li><a href="/list">ユーザー一覧</a></li>
         @guest
-            <!-- Show Login/Register Links -->
+
         @else
-            <!-- Show Logout Link -->
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('logout') }}"
                     onclick="event.preventDefault();

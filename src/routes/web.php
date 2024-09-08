@@ -6,8 +6,10 @@ use App\Http\Controllers\StampController;
 use App\Http\Controllers\RestController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ListController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +26,29 @@ Route::get('/', function () { return view('index'); });
 Route::get('/list', [ListController::class, 'userList'])->name('user.list');
 Route::get('/list/{user}/{year?}/{month?}', [ListController::class, 'showUser'])->name('user.show');
 Route::get('/attendance/{date?}', [AttendanceController::class, 'searchByDate'])->name('attendance.search');
-Route::get('/login', [StampController::class, 'login']);
-Route::get('/register', [RegisterController::class, 'register']);
-Route::get('/stamp/check-status', [StampController::class, 'checkStatus']);
 
-Auth::routes();
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+
+Route::get('/stamp/check-status', [StampController::class, 'checkStatus']);
+Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified']);
+
+Auth::routes(['verify' => true]);
+Route::get('/email/verify', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+});
+
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/stamp/clock_in', [StampController::class, 'clock_in']);
@@ -37,7 +57,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/stamp/rest_end', [RestController::class, 'rest_end']);
     Route::get('/stamp/status', [StampController::class, 'status']);
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/list', [ListController::class, 'userList'])->name('user.list');
+    Route::get('/list/{user}/{year?}/{month?}', [ListController::class, 'showUser'])->name('user.show');
 });
 
 Route::middleware(['cors'])->group(function () {
