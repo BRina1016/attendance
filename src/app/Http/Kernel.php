@@ -36,7 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\CustomEnsureEmailIsVerified::class,
+            // \App\Http\Middleware\CustomEnsureEmailIsVerified::class, // コメントアウトまたは削除
         ],
 
         'api' => [
@@ -47,8 +47,6 @@ class Kernel extends HttpKernel
 
     /**
      * The application's route middleware.
-     *
-     * These middleware may be assigned to groups or used individually.
      *
      * @var array<string, class-string|string>
      */
@@ -61,31 +59,28 @@ class Kernel extends HttpKernel
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \App\Http\Middleware\CustomEnsureEmailIsVerified::class,
     ];
 
     protected function schedule(Schedule $schedule)
-{
-    $schedule->call(function () {
-        \Log::info('Task is running at: ' . Carbon::now()->format('H:i:s'));
+    {
+        $schedule->call(function () {
+            \Log::info('Task is running at: ' . Carbon::now()->format('H:i:s'));
 
-        $stamps = Stamp::whereNull('clock_out')->get();
+            $stamps = Stamp::whereNull('clock_out')->get();
 
-        foreach ($stamps as $stamp) {
-            \Log::info('Processing stamp ID: ' . $stamp->id);
+            foreach ($stamps as $stamp) {
+                \Log::info('Processing stamp ID: ' . $stamp->id);
 
-            $clockOutTime = Carbon::parse($stamp->clock_in, 'UTC')->endOfDay()->subSecond();
-            $stamp->clock_out = $clockOutTime;
-            $stamp->work_time = $stamp->clock_in->diffInSeconds($stamp->clock_out);
+                $clockOutTime = Carbon::parse($stamp->clock_in, 'UTC')->endOfDay()->subSecond();
+                $stamp->clock_out = $clockOutTime;
+                $stamp->work_time = $stamp->clock_in->diffInSeconds($stamp->clock_out);
 
-            if ($stamp->save()) {
-                \Log::info('Successfully clocked out for stamp ID: ' . $stamp->id);
-            } else {
-                \Log::error('Failed to save clock out for stamp ID: ' . $stamp->id);
+                if ($stamp->save()) {
+                    \Log::info('Successfully clocked out for stamp ID: ' . $stamp->id);
+                } else {
+                    \Log::error('Failed to save clock out for stamp ID: ' . $stamp->id);
+                }
             }
-        }
-    })->everyMinute();
-}
-
-
+        })->everyMinute();
+    }
 }

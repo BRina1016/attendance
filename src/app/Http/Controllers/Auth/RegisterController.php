@@ -10,14 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
-
 
 class RegisterController extends Controller
 {
     use RegistersUsers;
 
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/'; // 登録後にリダイレクトするURL
 
     public function __construct()
     {
@@ -55,7 +53,7 @@ class RegisterController extends Controller
 
         auth()->login($user);
 
-        return redirect()->intended('/');
+        return redirect()->intended($this->redirectTo);
     }
 
     /**
@@ -67,7 +65,6 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        $user->sendEmailVerificationNotification();
-        return Redirect::route('login')->with('status', '登録が完了しました。メールをご確認ください。');
+        return redirect($this->redirectTo);
     }
 }

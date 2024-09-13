@@ -9,7 +9,6 @@ use App\Http\Controllers\ListController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,18 +28,12 @@ Route::get('/attendance/{date?}', [AttendanceController::class, 'searchByDate'])
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/stamp/check-status', [StampController::class, 'checkStatus']);
-Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified']);
-
-Auth::routes(['verify' => true]);
-Route::get('/email/verify', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-});
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -48,7 +41,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
 });
-
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/stamp/clock_in', [StampController::class, 'clock_in']);
